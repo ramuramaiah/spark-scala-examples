@@ -4,6 +4,8 @@ import java.io.File
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
+import org.apache.hadoop.io.IOUtils
+import java.io.IOException
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object SaveSingleFile extends App{
@@ -38,8 +40,39 @@ object SaveSingleFile extends App{
     .csv("/tmp/address-tmp")
   val srcFilePath=new Path("/tmp/address-tmp")
   val destFilePath= new Path("/tmp/address_merged2.csv")
-  FileUtil.copyMerge(hdfs, srcFilePath, hdfs, destFilePath, true, hadoopConfig, null)
+  copyMerge(hdfs, srcFilePath, hdfs, destFilePath, true, hadoopConfig)
   //Remove hidden CRC file if not needed.
   hdfs.delete(new Path("/tmp/.address_merged2.csv.crc"),true)
+  
+  def copyMerge(
+    srcFS: FileSystem, srcDir: Path,
+    dstFS: FileSystem, dstFile: Path,
+    deleteSource: Boolean, conf: Configuration
+  ): Boolean = {
+
+  if (dstFS.exists(dstFile)) {
+    throw new IOException(s"Target $dstFile already exists")
+  }
+
+  // Source path is expected to be a directory:
+  if (srcFS.getFileStatus(srcDir).isDirectory) {
+
+    val outputFile = dstFS.create(dstFile)
+    try {
+      srcFS
+        .listStatus(srcDir)
+        .sortBy(_.getPath.getName)
+        .collect {
+          case status if status.isFile =>
+            val inputFile = srcFS.open(status.getPath)
+            try { IOUtils.copyBytes(inputFile, outputFile, conf, false) }
+            finally { inputFile.close() }
+        }
+    } finally { outputFile.close() }
+
+    if (deleteSource) srcFS.delete(srcDir, true) else true
+  }
+    else false
+  }
 
 }

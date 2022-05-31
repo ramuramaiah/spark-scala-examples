@@ -13,5 +13,6 @@ object CaseClassSparkSchema extends App{
 
   import org.apache.spark.sql.catalyst.ScalaReflection
   val schema = ScalaReflection.schemaFor[Employee].dataType.asInstanceOf[StructType]
+  schema.printTreeString()
 
 }
