@@ -11,7 +11,7 @@ object DataFrameWithSimpleDSL {
       .appName("SparkByExample")
       .getOrCreate()
 
-    val filePath = "C://000_Projects/opt/BigData/zipcodes.csv"
+    val filePath = "src/main/resources/zipcodes.csv"
 
     var df:DataFrame = spark.read.option("header","true").csv(filePath)
     df.printSchema()

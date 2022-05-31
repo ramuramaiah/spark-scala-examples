@@ -17,14 +17,15 @@ object FromCSVMultiline extends App {
     .option("quotes","\"")
     .csv("src/main/resources/address-multiline.csv")
 
-  df.show(false)
+  val columns = Seq("Id","Address","City","State","Zipcode")
+  
+  import spark.sqlContext.implicits._
+  
+  //replace the new line char with space
+  val df2 = df.map(row=>{
+    val address = row.getString(1).replace("\n", " ")
+    (row.getString(0),address,row.getString(2),row.getString(3),row.getString(4))
+  }).toDF(columns:_*)
+  
+  df2.show(false)
 }
-
-
-
-
-
-
-
-
-
