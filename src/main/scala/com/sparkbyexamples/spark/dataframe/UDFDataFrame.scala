@@ -19,6 +19,7 @@ object UDFDataFrame {
     import org.apache.spark.sql.functions.udf
     val replaceUDF = udf(replace)
     val minDate = df.agg(min($"date1")).collect()(0).get(0)
+    println("minDate :" + minDate)
 
     val df2 = df.select("*").filter( to_date(replaceUDF($"date1")) > date_add(to_date(replaceUDF(lit(minDate))),7 ))
     df2.show()

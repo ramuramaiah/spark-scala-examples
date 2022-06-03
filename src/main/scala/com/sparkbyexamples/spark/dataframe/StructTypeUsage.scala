@@ -74,8 +74,7 @@ object StructTypeUsage extends App{
   df2.show()
 
   /* Schema from Json file */
-  val url = ClassLoader.getSystemResource("schema.json")
-  val schemaSource = Source.fromFile(url.getFile).getLines.mkString
+  val schemaSource = Source.fromFile("src/main/resources/schema.json").getLines.mkString
   val schemaFromJson = DataType.fromJson(schemaSource).asInstanceOf[StructType]
   val df3 = spark.createDataFrame(spark.sparkContext.parallelize(structureData),schemaFromJson)
   //df3.printSchema()
