@@ -39,8 +39,8 @@ object SortExample extends App {
   df.sort(col("department").asc,col("state").desc).show(false)
   df.orderBy(col("department").asc,col("state").desc).show(false)
 
-  df.select($"employee_name",asc("department"),desc("state"),$"salary",$"age",$"bonus").show(false)
+  //df.select($"employee_name",asc("department"),desc("state"),$"salary",$"age",$"bonus").show(false)
   df.createOrReplaceTempView("EMP")
-  spark.sql(" select employee_name,asc('department'),desc('state'),salary,age,bonus from EMP").show(false)
+  spark.sql(" select employee_name,department,state,salary,age,bonus from EMP order by department asc, state desc").show(false)
 
 }

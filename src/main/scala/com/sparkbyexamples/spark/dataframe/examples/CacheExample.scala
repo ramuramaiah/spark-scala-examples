@@ -21,6 +21,6 @@ object CacheExample extends App {
   val df3 = df2.where(col("Zipcode") === 704)
 
 
-  println(df2.count())
+  println(df3.count())
 
 }

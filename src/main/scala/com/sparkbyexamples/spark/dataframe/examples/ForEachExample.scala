@@ -15,6 +15,7 @@ object ForEachExample extends App {
 
   //DataFrame
   val df = spark.createDataFrame(data).toDF("Product","Amount","Country")
+  df.show(false)
   df.foreach(f=> println(f))
 
   val longAcc = spark.sparkContext.longAccumulator("SumAccumulator")

@@ -39,7 +39,11 @@ object PivotExample {
 //      "as (Country,Total)")) //.where("Total is not null")
 //    unPivotDF.show()
 
-    df.select(collect_list(""))
+    val df2 = df.groupBy("Product").agg(collect_list("Country"))
+    df2.show(false);
+    
+    val df3 = df.groupBy("Product").agg(collect_set("Country"))
+    df3.show(false);
 
     }
 }

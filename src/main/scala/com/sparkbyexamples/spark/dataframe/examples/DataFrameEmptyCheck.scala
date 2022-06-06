@@ -13,6 +13,7 @@ object DataFrameEmptyCheck extends App {
 
   println(df.isEmpty)
   println(df.rdd.isEmpty())
-  println(df.head())
+  //df.head() on empty data frame throws java.util.NoSuchElementException: next on empty iterator
+  //println(df.head())
   println()
 }

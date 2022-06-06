@@ -11,7 +11,7 @@ object SelectSelectExpr extends App {
 
   val data = Seq(("Java", "20000"), ("Python", "100000"), ("Scala", "3000"))
   val df = spark.createDataFrame(data).toDF("language","users_count")
-  df.select("language","users_count as count").show() //Example 1
+  df.select("language","users_count").show() //Example 1
   df.select(df("language"),df("users_count").as("count")).show() //Example 2
   df.select(col("language"),col("users_count")).show() ////Example 3
   //df.select("language",col("users_count")).show() ////Example 3
